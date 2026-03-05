@@ -1,33 +1,41 @@
 # 🎯 UML AI Assistant
 
-> Aplicație de modelare UML asistată de AI, construită cu Python + Streamlit + Claude API.  
+> Aplicație de modelare UML asistată de AI, construită cu Python + Streamlit + Groq API (Llama 3).  
 > Proiect demo pentru referatul **"Generative AI în UML"** — PSI, ASE CSIE Statistică, Anul 3.
 
 ## 🚀 Instalare și rulare
 
 ### 1. Clonează repository-ul
+```bash
 git clone https://github.com/PetreAlexandru/uml-ai-assistant.git
 cd uml-ai-assistant
+```
 
 ### 2. Creează un virtual environment
+```bash
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # Mac/Linux
+```
 
 ### 3. Instalează dependențele
-pip install -r requirements.txt
+```bash
+pip install streamlit groq
+```
 
 ### 4. Rulează aplicația
+```bash
 streamlit run app.py
+```
+Aplicația se deschide automat la `http://localhost:8501`
 
-Aplicația se deschide automat la http://localhost:8501
-
-## 🔑 API Key Anthropic
-1. Mergi pe [console.anthropic.com](https://console.anthropic.com)
+## 🔑 API Key Groq (gratuit)
+1. Mergi pe [console.groq.com](https://console.groq.com)
 2. Creează un cont și generează un API key
-3. Introdu cheia în sidebar-ul aplicației (nu se salvează nicăieri)
+3. Introdu cheia (`gsk_...`) în sidebar-ul aplicației
 
 ## 🗂️ Structura proiectului
+```
 uml-ai-assistant/
 ├── app.py                   # Entry point — UI Streamlit
 ├── requirements.txt         # Dependențe Python
@@ -35,9 +43,11 @@ uml-ai-assistant/
 ├── README.md
 └── utils/
     ├── __init__.py          # Export-uri principale
-    ├── constants.py         # Constante, texte, configurări
-    ├── claude_api.py        # Logica de comunicare cu API-ul Anthropic
+    ├── constants.py         # Constante, texte, system prompt
+    ├── groq_api.py        # Logica de comunicare cu Groq API
     └── mermaid_renderer.py  # Randarea vizuală a diagramelor
+├── assets/ 
+```
 
 ## 📊 Tipuri de diagrame suportate
 | Tip | Descriere |
@@ -51,6 +61,6 @@ uml-ai-assistant/
 
 ## 🛠️ Tehnologii
 - **Python** — limbaj de programare
-- **Streamlit** — framework web rapid pentru aplicații de date
-- **Anthropic Claude API** — modelul AI care generează diagramele
+- **Streamlit** — framework web pentru interfața utilizator
+- **Groq API (Llama 3.3 70B)** — modelul AI care generează diagramele
 - **Mermaid.js** — librărie JavaScript pentru randarea vizuală UML

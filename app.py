@@ -96,15 +96,15 @@ def set_input(text):
 
 
 with st.sidebar:
+    st.image("assets/ase_logo.png", width=160)
+    st.image("assets/csie_logo.png", width=120)
     st.markdown("## 🎯 UML AI Assistant")
-    st.caption("Powered by Claude · ASE CSIE Statistica")
-    st.divider()
 
     st.text_input(
-        "🔑 Google Gemini API Key",
+        "🔑 Groq API Key",
         type="password",
-        placeholder="AIza...",
-        help="Obtine cheia de pe aistudio.google.com",
+        placeholder="gsk_...",
+        help="Obtine cheia de pe console.groq.com",
         key="api_key",
     )
 
@@ -129,7 +129,7 @@ with st.sidebar:
             st.rerun()
 
     st.divider()
-    st.caption("PSI · ASE CSIE Statistica · 2025")
+    st.caption("PSI · ASE CSIE Statistica · 2026")
 
 
 st.markdown("### 🤖 Asistent UML cu Generative AI")
