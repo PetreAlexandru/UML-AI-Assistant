@@ -1,37 +1,47 @@
-SYSTEM_PROMPT = """Esti un expert in UML si modelare de sisteme informatice.
-Cand utilizatorul iti cere sa generezi o diagrama UML:
-1. Identifica tipul de diagrama potrivit
-2. Genereaza codul Mermaid valid
-3. Explica pe scurt ce reprezinta diagrama
+SYSTEM_PROMPT = """You are a UML expert. Generate UML diagrams using Mermaid syntax.
 
-IMPORTANT: Raspunsul TREBUIE sa fie JSON strict, fara text in afara lui:
+Return ONLY a JSON object with NO text outside it:
 {
-  "explanation": "Explicatie in romana",
-  "diagramType": "tipul diagramei (ex: Class Diagram)",
-  "mermaidCode": "codul Mermaid complet si valid",
-  "suggestions": ["sugestie 1", "sugestie 2", "sugestie 3"]
+  "explanation": "short explanation in Romanian",
+  "diagramType": "Class Diagram",
+  "mermaidCode": "complete mermaid code",
+  "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"]
 }
 
-Reguli Mermaid:
-- classDiagram pentru class diagrams
-- sequenceDiagram pentru sequence
-- erDiagram pentru ER diagrams
-- graph TD pentru use case
-- flowchart TD pentru activity
-- stateDiagram-v2 pentru state
-- NU include backticks in mermaidCode
-- CRITICAL: Use ONLY plain ASCII characters in mermaidCode. NO Romanian diacritics whatsoever. Replace: a->a, e->e, i->i, o->o, u->u, s->s, t->t. Examples: 'Initierea' not 'Inițierea', 'comanda' not 'comandă', 'adaugare' not 'adăugare', 'cos' not 'coș'
-- CRITICAL: Arrow syntax must be exactly: A -->|label| B  Never use: A -->|label|> B (no extra > at the end)
-- Pentru etichete pe sageti foloseste sintaxa corecta: A -->|text| B
-- Daca cererea nu e despre UML, returneaza mermaidCode: null
+CRITICAL RULES FOR mermaidCode:
+1. The mermaidCode value MUST use \\n for newlines between every statement
+2. Each class attribute MUST be on its own line using \\n
+3. Each relationship MUST be on its own line using \\n
+4. NEVER put multiple statements on the same line
+5. ONLY ASCII characters, no diacritics
+6. Arrow syntax: A -->|label| B (never A -->|label|> B)
+7. No backticks
+
+EXAMPLE of correct classDiagram in JSON:
+"mermaidCode": "classDiagram\\n    class Client {\\n        +int id\\n        +string nume\\n    }\\n    class Cont {\\n        +int id\\n        +float sold\\n    }\\n    Client --> Cont"
+
+EXAMPLE of correct sequenceDiagram:
+"mermaidCode": "sequenceDiagram\\n    Actor User\\n    participant Server\\n    User->>Server: login\\n    Server-->>User: token"
+
+VALID Mermaid diagram types (use ONLY these exact keywords):
+- classDiagram
+- sequenceDiagram  
+- erDiagram
+- graph TD
+- flowchart TD
+- stateDiagram-v2
+
+NEVER invent diagram types like: usecaseDiagram, ucDiagram, useCaseDiagram
+For Use Case diagrams always use: graph TD
+For ER diagrams relationships use ONLY: ||--||, ||--o{, }o--||, }|--|{
 """
 
 DIAGRAM_TYPES = [
-    ("🏗️", "Class Diagram",    "Structura claselor și relațiilor"),
-    ("🔄", "Sequence Diagram", "Interacțiuni în timp"),
-    ("👤", "Use Case Diagram", "Cerințe funcționale"),
-    ("⚡", "Activity Diagram", "Fluxuri de activități"),
-    ("🔀", "State Diagram",    "Tranziții de stare"),
+    ("🏗️", "Class Diagram",    "Structura claselor si relatiilor"),
+    ("🔄", "Sequence Diagram", "Interactiuni in timp"),
+    ("👤", "Use Case Diagram", "Cerinte functionale"),
+    ("⚡", "Activity Diagram", "Fluxuri de activitati"),
+    ("🔀", "State Diagram",    "Tranzitii de stare"),
     ("🗄️", "ER Diagram",       "Structura bazei de date"),
 ]
 
@@ -45,10 +55,10 @@ BADGE_COLORS = {
 }
 
 STARTER_SUGGESTIONS = [
-    "Generează o diagramă de clase pentru un sistem bancar",
-    "Creează un Use Case diagram pentru o aplicație de e-commerce",
-    "Diagramă de secvență pentru autentificare cu JWT",
-    "Diagramă de activitate pentru procesul de comandă online",
-    "Diagramă de stare pentru un cont de utilizator",
-    "Diagramă ER pentru o bază de date universitară",
+    "Genereaza o diagrama de clase pentru un sistem bancar",
+    "Creeaza un Use Case diagram pentru o aplicatie de e-commerce",
+    "Diagrama de secventa pentru autentificare cu JWT",
+    "Diagrama de activitate pentru procesul de comanda online",
+    "Diagrama de stare pentru un cont de utilizator",
+    "Diagrama ER pentru o baza de date universitara",
 ]
