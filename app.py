@@ -253,9 +253,9 @@ def delete_conversation(conv_id):
 with st.sidebar:
     col1, col2 = st.columns(2)
     with col1:
-        st.image("assets/ase_logo.png", width=100)
+        st.image("https://ase.ro/app/uploads/2024/06/sigla-ase-alb-mic-nou.png", width=100)
     with col2:
-        st.image("assets/csie_logo.png", width=80)
+        st.image("https://csie.ase.ro/wp-content/uploads/2020/10/cropped-CSIE_new-300x132.png", width=80)
 
     st.markdown(f"## 🎯 UML AI Assistant")
     st.caption("Powered by Groq · ASE CSIE Statistica")
