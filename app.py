@@ -372,7 +372,7 @@ for i, msg in enumerate(st.session_state.messages):
     data         = msg.get("data", {})
     explanation  = data.get("explanation", "")
     diagram_type = data.get("diagramType")
-    mermaid_code = data.get("mermaidCode")
+    plantuml_code = data.get("plantUMLCode")
     suggestions  = data.get("suggestions", [])
 
     badge_html = ""
@@ -389,19 +389,19 @@ for i, msg in enumerate(st.session_state.messages):
         unsafe_allow_html=True,
     )
 
-    if mermaid_code:
-        tab1, tab2 = st.tabs(["👁️ Preview diagrama", "📄 Cod Mermaid"])
+    if plantuml_code:
+        tab1, tab2 = st.tabs(["👁️ Preview diagrama", "📄 Cod PlantUML"])
         with tab1:
-            render_mermaid(mermaid_code, key=f"mermaid_{i}")
+            render_mermaid(plantuml_code, key=f"plantuml_{i}")
         with tab2:
-            st.code(mermaid_code, language="text")
+            st.code(plantuml_code, language="text")
             st.download_button(
-                "⬇️ Descarca .mmd",
-                data=mermaid_code,
-                file_name="diagram.mmd",
-                mime="text/plain",
-                key=f"dl_{i}",
-            )
+            "⬇️ Descarca .puml",
+            data=plantuml_code,
+            file_name="diagram.puml",
+            mime="text/plain",
+            key=f"dl_{i}",
+        )
 
     if suggestions:
         st.markdown("**💡 Sugestii de continuare:**")

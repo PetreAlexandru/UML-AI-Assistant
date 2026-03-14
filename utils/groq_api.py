@@ -5,16 +5,39 @@ from groq import Groq
 from utils.constants import SYSTEM_PROMPT
 
 
-def fix_mermaid(code: str) -> str:
+def fix_plantuml(code: str) -> str:
     if not code:
         return code
-    # Convertim \n literal in newline real (in caz ca json.loads nu l-a procesat)
+
     code = code.replace('\\n', '\n')
     code = code.replace('\\t', '    ')
-    # Fix -->|text|> B -> -->|text| B
-    code = re.sub(r'\|>\s*([A-Za-z])', r'| \1', code)
-    return code.strip()
 
+    # Fix note pe mai multe linii - le unim pe o singura linie
+    import re
+    code = re.sub(r'note (right|left|top|bottom) of (\w+) : (.+?)\n(.+?)\n', 
+                  r'note \1 of \2 : \3 \4\n', code)
+
+    if '@startuml' not in code:
+        code = '@startuml\n' + code
+    if '@enduml' not in code:
+        code = code + '\n@enduml'
+
+    if 'skinparam' not in code:
+        code = code.replace('@startuml\n', 
+            '@startuml\n'
+            'skinparam backgroundColor white\n'
+            'skinparam classBackgroundColor #f8fafc\n'
+            'skinparam classBorderColor #6366f1\n'
+            'skinparam classArrowColor #334155\n'
+            'skinparam classFontColor #1e293b\n'
+            'skinparam actorBackgroundColor #dbeafe\n'
+            'skinparam usecaseBackgroundColor #dbeafe\n'
+            'skinparam sequenceParticipantBackgroundColor #dbeafe\n'
+            'skinparam stateBackgroundColor #dbeafe\n'
+            'skinparam entityBackgroundColor #dbeafe\n'
+        )
+
+    return code.strip()
 
 def call_claude(user_text: str) -> dict:
     """
@@ -26,7 +49,7 @@ def call_claude(user_text: str) -> dict:
         return {
             "explanation": "⚠️ Introdu API key-ul Groq in sidebar.",
             "diagramType": None,
-            "mermaidCode": None,
+            "plantUMLCode": None,
             "suggestions": [],
         }
 
@@ -46,27 +69,26 @@ def call_claude(user_text: str) -> dict:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=messages,
-            temperature=0.3,
+            temperature=0.2,
             max_tokens=2000,
         )
 
         raw = response.choices[0].message.content
-        
-        # Extragem JSON-ul din raspuns
+
+        # Extragem JSON-ul
         clean = re.sub(r"```json|```", "", raw).strip()
         start = clean.find('{')
         end = clean.rfind('}')
         if start != -1 and end != -1:
             clean = clean[start:end+1]
-        
-        # Uneori Llama pune \n literal ca text in JSON
-        # json.loads il trateaza corect, dar verificam si fix_mermaid
+
         data = json.loads(clean)
 
-        # Aplicam fix-ul pe codul Mermaid
-        if data.get("mermaidCode"):
-            data["mermaidCode"] = fix_mermaid(data["mermaidCode"])
+        # Aplicam fix-ul pe codul PlantUML
+        if data.get("plantUMLCode"):
+            data["plantUMLCode"] = fix_plantuml(data["plantUMLCode"])
 
+        # Salvam in istoric
         st.session_state.api_history.append(
             {"role": "user", "content": user_text}
         )
@@ -79,13 +101,13 @@ def call_claude(user_text: str) -> dict:
         return {
             "explanation": f"Debug - raspuns brut: {raw}",
             "diagramType": None,
-            "mermaidCode": None,
+            "plantUMLCode": None,
             "suggestions": [],
         }
     except Exception as e:
         return {
             "explanation": f"❌ Eroare API: {str(e)}",
             "diagramType": None,
-            "mermaidCode": None,
+            "plantUMLCode": None,
             "suggestions": [],
         }
