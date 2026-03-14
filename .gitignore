@@ -3,5 +3,9 @@ venv/
 .streamlit/
 __pycache__/
 *.pyc
+*.pyo
 .vscode/
+.idea/
 .DS_Store
+Thumbs.db
+conversations.json

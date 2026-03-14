@@ -12,10 +12,11 @@ def fix_plantuml(code: str) -> str:
     code = code.replace('\\n', '\n')
     code = code.replace('\\t', '    ')
 
-    # Fix note pe mai multe linii - le unim pe o singura linie
-    import re
-    code = re.sub(r'note (right|left|top|bottom) of (\w+) : (.+?)\n(.+?)\n', 
-                  r'note \1 of \2 : \3 \4\n', code)
+    # Fix note pe mai multe linii
+    code = re.sub(
+        r'note (right|left|top|bottom) of (\w+) : (.+?)\n(.+?)\n',
+        r'note \1 of \2 : \3 \4\n', code
+    )
 
     if '@startuml' not in code:
         code = '@startuml\n' + code
@@ -23,7 +24,7 @@ def fix_plantuml(code: str) -> str:
         code = code + '\n@enduml'
 
     if 'skinparam' not in code:
-        code = code.replace('@startuml\n', 
+        code = code.replace('@startuml\n',
             '@startuml\n'
             'skinparam backgroundColor white\n'
             'skinparam classBackgroundColor #f8fafc\n'
@@ -39,10 +40,8 @@ def fix_plantuml(code: str) -> str:
 
     return code.strip()
 
+
 def call_claude(user_text: str) -> dict:
-    """
-    Trimite un mesaj catre Groq (Llama 3) si returneaza raspunsul parsat ca dict.
-    """
     api_key = st.session_state.get("api_key", "")
 
     if not api_key:
@@ -74,8 +73,6 @@ def call_claude(user_text: str) -> dict:
         )
 
         raw = response.choices[0].message.content
-
-        # Extragem JSON-ul
         clean = re.sub(r"```json|```", "", raw).strip()
         start = clean.find('{')
         end = clean.rfind('}')
@@ -84,11 +81,9 @@ def call_claude(user_text: str) -> dict:
 
         data = json.loads(clean)
 
-        # Aplicam fix-ul pe codul PlantUML
         if data.get("plantUMLCode"):
             data["plantUMLCode"] = fix_plantuml(data["plantUMLCode"])
 
-        # Salvam in istoric
         st.session_state.api_history.append(
             {"role": "user", "content": user_text}
         )
