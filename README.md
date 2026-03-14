@@ -1,4 +1,5 @@
 # 🎯 UML AI Assistant
+# DiagramFlow
 
 > Aplicatie de modelare UML asistata de AI, construita cu Python + Streamlit + Groq API (Llama 3.3).
 > Proiect demo pentru referatul **"Generative AI in UML"** — PSI, ASE CSIE Statistica, Anul 3.
@@ -33,6 +34,9 @@ pip install streamlit groq requests
 streamlit run app.py
 
 Aplicatia se deschide la http://localhost:8501
+
+## Demo online
+Acceseaza aplicatia direct: https://uml-ai-assistant-fvwyf6hqsykzoujyvuxl8t.streamlit.app/
 
 ## API Key Groq (gratuit)
 1. Mergi pe console.groq.com
